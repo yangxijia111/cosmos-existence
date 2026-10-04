@@ -40,6 +40,12 @@ export interface EraVisualConfig {
 
   /** 发光/能量强度 0~1 */
   intensity: number;
+
+  /**
+   * 屏幕亮度主题：bright = 该纪元画面大面积发白（如奇点白炽光核），
+   * 覆盖层文字需切换为深色 + 白色光晕才可读；缺省 dim 保持浅色文字
+   */
+  screenBrightness?: "bright" | "dim";
 }
 
 export interface CosmicEra {

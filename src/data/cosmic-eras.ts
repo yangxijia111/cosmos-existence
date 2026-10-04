@@ -27,6 +27,8 @@ export const cosmicEras: CosmicEra[] = [
       },
       camera: { radius: [50, 10], fov: [75, 60] },
       intensity: 1.0,
+      // 白炽光核 + 全屏加色粒子：纪元中后段屏幕大面积过曝发白
+      screenBrightness: "bright",
     },
   },
   {

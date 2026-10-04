@@ -185,6 +185,7 @@ buildGraph()（data/questions/index.ts）
 - ~~**`THREE.Clock` 弃用警告**~~ ✅ 第二轮已修复：`state.clock.elapsedTime` 全部改为 `useFrameElapsed`（每帧 delta 累加），控制台已无弃用警告来源。
 
 ### P2（体验打磨）
+- ~~**奇点白屏下底部文字不可读**~~ ✅ 第五轮已修：见 §13（`screenBrightness` 数据字段 + `lib/text-contrast.ts` 亮度插值主题）。
 - ~~`public/` 还是 create-next-app 默认 SVG~~ ✅ 第二轮已做：删除默认 SVG/favicon，新增 `src/app/icon.svg`（奇点光核 + 共动轨道）、`apple-icon.tsx`、`opengraph-image.tsx`（1200×630，ImageResponse 程序化生成，mulberry32 确定性星点，构建产物可复现）。
 - ~~NarrativeOverlay 旁白句切换用 `floor(u * total)`，末句停留时间短~~ ✅ 第二轮已做：改为按权重分配（末句权重 ×2）。
 - 场景转场是"上一纪元 opacity 0.35 淡出 + 新纪元淡入"，6 个场景共用同一粒子云种子策略，转场电影感可再打磨（见 PROJECT_PLAN 难点1的原始设想：色彩连续插值）。
@@ -337,12 +338,44 @@ gh repo edit --homepage "https://cosmos-existence.vercel.app" \
 
 ---
 
+## 13. 第五轮：开场白屏文字可读性优化（2026-10-04）
+
+### 13.1 问题
+
+用户反馈：开场动画进入「奇点」纪元后，白炽光核 + 6 万加色粒子使屏幕大面积过白发亮，而底部字幕（`--color-void-50` 近白色）与时间轴文字（void-100/200/400）在白屏上几乎不可见（浏览器实测 + 视觉模型确认"标题/旁白/COSMIC TIME/时间数字/播放按钮均被亮光淹没"）。
+
+### 13.2 方案（数据驱动，延续"数据层为唯一事实来源"原则）
+
+- **数据层**：`EraVisualConfig` 新增可选字段 `screenBrightness?: "bright" | "dim"`（`src/data/types.ts`），奇点标记 `"bright"`（`src/data/cosmic-eras.ts`）。
+- **纯函数引擎**：新增 `src/lib/text-contrast.ts` —— `contrastAt(t)` 计算连续亮度因子 b ∈ [0,1]：
+  - 当前纪元 bright：`smoothstep(0.15, 0.55, u)`（奇点早期画面尚暗保持浅字，中后段随光核增大切深字）；
+  - 前一纪元 bright（交叉淡出的白光残留）：前 30% 从深字渐回浅字；
+  - 其余 b=0。
+  - `textThemeAt(t)` 在暗/亮两套主题间连续插值：primary(#ededf5↔#0b0b1a)、secondary(#3d3d6e↔#1c1c38)、icon(#c4c4dc↔#1c1c38)、handle(#ededf5↔#131328)、shadow(暗屏微光↔白色柔光三层晕)。b=0 时与原样式逐像素一致（暗屏零回归）。
+- **UI 层**：`NarrativeOverlay`（标题/科学标签/旁白句）、`CosmicTimeline`（COSMIC TIME/时间数字/播放按钮图标/拖动手柄描边）、`EraMarker`（hover 提示）全部改为内联 `style={{ color, textShadow }}`。播放按钮 hover 反馈从文字亮化改为边框亮化（内联 color 会盖过 Tailwind hover 类）。
+- 原有的 `text-glow` 类仍保留在 `globals.css`（b=0 的 shadow 值与它一致），旁白句改走内联。
+
+### 13.3 验证记录（生产构建实测）
+
+- 奇点白屏（播放 12s，u≈0.6，b=1）：视觉模型确认标题/旁白/COSMIC TIME/时间数字/播放按钮全部深色清晰可读，"没有难以辨认的元素"；
+- 暴胀起点（`?from=inflation` 直达，白光残留 b=1）：computed style 确认旁白 `rgb(11,11,26)` + 白晕、标题 `rgb(28,28,56)`；
+- 恒星纪元（暗屏 b=0）：computed style 确认旁白回到 `rgb(237,237,245)` + 原微光 shadow，视觉模型确认浅色微光风格无回归；
+- `pnpm verify` 四绿（typecheck/lint/build/validate:data）。
+
+### 13.4 踩坑：Turbopack dev 长会话状态分叉（非产品 bug）
+
+dev（Turbopack）+ IAB webview 长会话中，多次 HMR/截图后出现过：`NarrativeOverlay`（dynamic chunk）与 `CosmicTimeline`（静态 chunk）对同一 store 的更新可见性分裂、R3F 播放循环冻结、t 被重置回 0 附近等玄学。**硬刷新或生产构建后全部消失**。排查此类问题时先切 `pnpm start` 生产模式再下结论，不要在 dev 长会话里调试状态同步。
+
+---
+
+
 ## 附：关键文件直达
 
 | 关注点 | 文件 |
 |---|---|
 | 体验状态机 | `src/app/page.tsx` |
 | 时间线引擎（纯函数） | `src/lib/cosmology.ts` |
+| 覆盖层文字对比度引擎（纯函数） | `src/lib/text-contrast.ts` |
 | 共动粒子 | `src/lib/particles.ts` + `src/components/canvas/effects/ComovingCloud.tsx` |
 | 6 纪元场景 | `src/components/canvas/scenes/*.tsx` |
 | 时间轴 UI | `src/components/timeline/CosmicTimeline.tsx` + `src/hooks/useTimelineDrag.ts` |

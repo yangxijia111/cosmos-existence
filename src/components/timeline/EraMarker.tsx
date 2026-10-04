@@ -1,14 +1,16 @@
 "use client";
 
 import { eraTicks, eraIndexAt } from "@/lib/cosmology";
+import { textThemeAt } from "@/lib/text-contrast";
 import { useTimelineStore } from "@/stores/useTimelineStore";
 
-/** 纪元刻度点 — 点击跳转 */
+/** 纪元刻度点 — 点击跳转;悬停提示文字随屏幕亮度主题切换 */
 export function EraMarker() {
   const setT = useTimelineStore((s) => s.setT);
   const t = useTimelineStore((s) => s.t);
   const ticks = eraTicks();
   const currentEraIdx = eraIndexAt(t);
+  const theme = textThemeAt(t);
 
   return (
     <div className="relative h-full w-full">
@@ -32,10 +34,16 @@ export function EraMarker() {
             {/* hover 提示 */}
             <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <div className="text-center">
-                <div className="text-xs tracking-widest text-[var(--color-void-100)]">
+                <div
+                  className="text-xs tracking-widest"
+                  style={{ color: theme.icon, textShadow: theme.shadow }}
+                >
                   {tick.title}
                 </div>
-                <div className="font-mono-num text-[10px] tracking-wider text-[var(--color-void-400)]">
+                <div
+                  className="font-mono-num text-[10px] tracking-wider"
+                  style={{ color: theme.secondary, textShadow: theme.shadow }}
+                >
                   {tick.display}
                 </div>
               </div>

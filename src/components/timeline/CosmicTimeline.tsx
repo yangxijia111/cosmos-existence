@@ -6,10 +6,12 @@ import { useTimelineDrag } from "@/hooks/useTimelineDrag";
 import { EraMarker } from "./EraMarker";
 import { cosmicEras } from "@/data/cosmic-eras";
 import { eraIndexAt, timeAt } from "@/lib/cosmology";
+import { textThemeAt } from "@/lib/text-contrast";
 
 /**
  * CosmicTimeline — 对数刻度可拖动时间轴
  * 双向联动：store.t 驱动 UI；拖动/播放写回 store.t
+ * 文字/控件颜色随屏幕亮度插值,保证亮屏纪元(奇点)下可读
  */
 export function CosmicTimeline() {
   const t = useTimelineStore((s) => s.t);
@@ -19,6 +21,8 @@ export function CosmicTimeline() {
   const play = useTimelineStore((s) => s.play);
   const pause = useTimelineStore((s) => s.pause);
   const setT = useTimelineStore((s) => s.setT);
+
+  const theme = textThemeAt(t);
 
   const { ref, progress, setProgress, dragging } = useTimelineDrag(t);
 
@@ -60,21 +64,28 @@ export function CosmicTimeline() {
       {/* 当前纪元信息 */}
       <div className="mb-4 flex items-end justify-between">
         <div>
-          <div className="font-mono-num text-[10px] tracking-[0.3em] text-[var(--color-void-400)]">
+          <div
+            className="font-mono-num text-[10px] tracking-[0.3em]"
+            style={{ color: theme.secondary, textShadow: theme.shadow }}
+          >
             COSMIC TIME
           </div>
-          <div className="mt-1 font-mono-num text-sm tracking-widest text-[var(--color-void-100)]">
+          <div
+            className="mt-1 font-mono-num text-sm tracking-widest"
+            style={{ color: theme.icon, textShadow: theme.shadow }}
+          >
             {seconds.toExponential(1)} s · {era.title}
             {/* 非 1× 时常驻显示倍速（倍速状态对屏幕阅读器也可见） */}
             {rate !== 1 ? ` · ${rate}×` : ""}
           </div>
         </div>
 
-        {/* 播放控制 */}
+        {/* 播放控制(hover 反馈走边框亮化;图标色随亮度主题内联) */}
         <button
           onClick={toggle}
           aria-label={playing ? "暂停" : "播放"}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-void-700)] text-[var(--color-void-200)] transition-colors hover:border-[var(--color-cosmic-indigo)] hover:text-[var(--color-void-50)] focus-visible:outline-none"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-void-700)] transition-colors hover:border-[var(--color-cosmic-indigo)] focus-visible:outline-none"
+          style={{ color: theme.icon }}
         >
           {playing ? (
             <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
@@ -119,8 +130,8 @@ export function CosmicTimeline() {
         <EraMarker />
         {/* 拖动手柄 */}
         <div
-          className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--color-void-50)] bg-[var(--color-void-950)] transition-transform duration-150"
-          style={{ left: `${progress * 100}%` }}
+          className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[var(--color-void-950)] transition-transform duration-150"
+          style={{ left: `${progress * 100}%`, borderColor: theme.handle }}
         >
           <div className="absolute inset-0 rounded-full bg-[var(--color-cosmic-indigo)] opacity-0 transition-opacity duration-300 hover:opacity-30" />
         </div>

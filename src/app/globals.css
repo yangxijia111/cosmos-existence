@@ -1,26 +1,160 @@
 @import "tailwindcss";
 
+/* ============================================================
+   COSMOS / 存在 — 设计系统 CSS 变量
+   所有视觉 token 在此定义，Tailwind 通过 @theme 映射
+   ============================================================ */
+
+@theme {
+  /* 深空色阶 */
+  --color-void-950: #030308;
+  --color-void-900: #060611;
+  --color-void-800: #0b0b1a;
+  --color-void-700: #131328;
+  --color-void-600: #1c1c38;
+  --color-void-500: #2a2a52;
+  --color-void-400: #3d3d6e;
+  --color-void-300: #565692;
+  --color-void-200: #8a8ab8;
+  --color-void-100: #c4c4dc;
+  --color-void-50:  #ededf5;
+
+  /* 宇宙点缀色 */
+  --color-cosmic-cyan:    #6ee7f0;
+  --color-cosmic-indigo:  #818cf8;
+  --color-cosmic-violet:  #a78bfa;
+  --color-cosmic-rose:    #fb7185;
+  --color-cosmic-amber:   #fbbf24;
+  --color-cosmic-stellar: #fffbeb;
+
+  /* 语义色 */
+  --color-background: var(--color-void-950);
+  --color-surface: var(--color-void-900);
+  --color-foreground: var(--color-void-50);
+  --color-muted: var(--color-void-200);
+  --color-subtle: var(--color-void-400);
+
+  /* 字体（系统栈，零外部字体下载） */
+  --font-serif-cn: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+
+  /* 排版比例（黄金比例 1.618） */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.618rem;
+  --text-2xl:  2.618rem;
+  --text-3xl:  4.236rem;
+  --text-4xl:  6.854rem;
+
+  /* 留白节奏 */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+  --space-2xl: 8rem;
+
+  /* 动效时长 */
+  --duration-breath: 4s;
+  --duration-slow: 2s;
+  --duration-normal: 0.8s;
+  --duration-fast: 0.3s;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* 非 Tailwind 场景备用 */
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  /* 深色模式下默认隐藏滚动条 */
+  scrollbar-color: var(--color-void-600) var(--color-void-950);
+}
+
+/* 标题衬线中文 */
+.font-serif-cn {
+  font-family: var(--font-serif-cn);
+}
+
+/* 等宽数字 */
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 呼吸微光 */
+@keyframes breathe {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.02); }
+}
+.animate-breathe {
+  animation: breathe var(--duration-breath) ease-in-out infinite;
+}
+
+/* awakening 过渡淡出（CSS keyframe，无需 JS 动画库） */
+@keyframes awakening-fade {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+.animate-awakening-fade {
+  animation: awakening-fade 2s ease-out forwards;
+}
+
+/* 快进提示：显示约 3 秒后淡出（纯 CSS，无需 JS 计时） */
+@keyframes hint-fade {
+  0%, 60% { opacity: 0.5; }
+  100%    { opacity: 0; }
+}
+.animate-hint-fade {
+  animation: hint-fade 5s ease-out forwards;
+}
+
+/* 暗角 */
+.vignette::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(3,3,8,0.55) 100%);
+  z-index: 30;
+}
+
+/* 文字暗角微调（用于字幕） */
+.text-glow {
+  text-shadow: 0 0 8px rgba(255,255,255,0.15), 0 0 24px rgba(129,140,248,0.1);
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-void-600);
+  border-radius: 4px;
+}
+
+/* 高对比焦点 */
+:focus-visible {
+  outline: 2px solid var(--color-cosmic-indigo);
+  outline-offset: 4px;
+}
+
+/* 动效减弱偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-breathe {
+    animation: none;
+  }
+  * {
+    scroll-behavior: auto;
+  }
 }

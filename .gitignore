@@ -22,6 +22,8 @@
 
 # misc
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.pem
 
 # debug
@@ -30,11 +32,20 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files（.env.example 示例文件入库，其余一律忽略）
 .env*
+!.env.example
 
-# vercel
+# vercel（.vercel-cli 含本地登录凭证，严禁提交）
 .vercel
+.vercel-cli
+lighthouse-*.json
+
+# gui 冒烟测试截图
+/gui-test-screenshots/
+
+# 本地工具配置（ZCode 工作区搜索规则）
+.zcodeignore
 
 # typescript
 *.tsbuildinfo

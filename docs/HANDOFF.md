@@ -221,7 +221,7 @@ buildGraph()（data/questions/index.ts）
   - `3ef812d` Initial commit from Create Next App
 - **切勿 `git add .`**：`.vercel-cli/`（Vercel 凭证）、`.next/`、`node_modules/`、`lighthouse-*.json` 必须保持被 .gitignore 忽略（已配置，但提交前务必先 `git status` 确认）。
 - 本地 `.vercel-cli/` 目录：含 Vercel 登录凭证，**严禁删除/移动/提交**。
-- 线上更新需手动部署（2026-10-04 push 后实测无自动部署，本项目未配置 Vercel Git 集成）：`npx vercel deploy --prod --yes -Q ".vercel-cli"`。**注意：截至第五轮文档提交时，线上仍为第四轮版本（不含 §13 白屏修复），需手动部署后生效。**
+- 线上更新需手动部署（2026-10-04 push 后实测无自动部署，本项目未配置 Vercel Git 集成）：`npx vercel deploy --prod --yes -Q ".vercel-cli"`。第五轮修复已于 2026-10-04 部署上线（部署 `1swx8cx2v`，线上实测奇点深色主题生效）。
 
 ---
 

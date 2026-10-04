@@ -309,22 +309,25 @@ buildGraph()（data/questions/index.ts）
 2. **仓库名**：✅ 已确认 `cosmos-existence`，仓库 **Public**。
 3. **仓库简介**：`沉浸式哲学探索网站 — 从宇宙诞生到人类意识与人生意义 / An immersive philosophy journey from the birth of the universe to consciousness and the meaning of life`。
 
-### 12.4 发布步骤（已获用户确认执行）
+### 12.4 发布步骤（已于 2026-10-04 执行完成）
 
 ```bash
-# 1. 本地提交（切勿 git add . ，已核对 status）
-git add .gitignore .env.example README.md AGENTS.md CLAUDE.md vercel.json .prettierrc \
+# 已执行：本地提交（显式文件清单，未用 git add .）
+git add .gitignore .env.example LICENSE README.md AGENTS.md CLAUDE.md vercel.json .prettierrc \
         package.json pnpm-lock.yaml pnpm-workspace.yaml eslint.config.mjs next.config.ts \
         postcss.config.mjs tsconfig.json docs/ public/ src/
 git commit -m "feat: COSMOS/存在 Phase 0-9 完整实现（体验流+图谱+数据驱动+部署）"
+# 提交规模：92 files, +7916 / -128
 
-# 2. LICENSE 文件（按用户所选协议创建后一并提交）
-
-# 3. 创建 Public 仓库并推送（gh 已安装则）
-gh repo create cosmos-existence --public --source . --push
-# 或手动：先在 GitHub 网页建空仓库，再
-# git remote add origin git@github.com:<user>/cosmos-existence.git && git push -u origin main
+# 已执行：创建 Public 仓库并推送（gh 已登录 yangxijia111）
+gh repo create cosmos-existence --public --source . --push --description "沉浸式哲学探索网站 — ..."
+gh repo edit --homepage "https://cosmos-existence.vercel.app" \
+  --add-topic nextjs --add-topic react --add-topic threejs --add-topic react-three-fiber \
+  --add-topic webgl --add-topic philosophy --add-topic framer-motion --add-topic zustand
 ```
+
+**仓库地址**：https://github.com/yangxijia111/cosmos-existence （Public，main 分支）
+远程树已抽查：仅 `.env.example`（示例）与 `vercel.json`（构建配置）匹配敏感关键词，无凭证泄漏。
 
 ### 12.5 发布后注意
 

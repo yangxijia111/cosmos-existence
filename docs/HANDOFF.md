@@ -212,15 +212,16 @@ buildGraph()（data/questions/index.ts）
 - 项目开启了 Deployment Protection，但生产域已验证公网 200（生产部署默认公开）。
 - LLM 功能上线前需在 Vercel 项目设置里加环境变量 `LLM_API_KEY`。
 
-### Git（重要：尚未提交任何业务代码）
-- 当前只有一个 `Initial commit from Create Next App`；**本项目的全部源码、docs/、vercel.json、.prettierrc 等均为未提交状态**（见 `git status`）。
-- 建议提交策略（与 PROJECT_PLAN 的节奏建议一致）：
-  ```bash
-  git add docs src public vercel.json .prettierrc README.md package.json pnpm-lock.yaml pnpm-workspace.yaml .gitignore
-  git commit -m "phase-0~9: COSMOS 存在完整实现 + 部署配置"
-  ```
-  **切勿 `git add .`**：`.vercel-cli/`（Vercel 凭证）、`.next/`、`node_modules/`、`lighthouse-*.json` 必须保持被 .gitignore 忽略（已配置，但 `git add .` 前请务必先 `git status` 确认）。
+### Git（已开源，随进度推送）
+- 仓库：https://github.com/yangxijia111/cosmos-existence （Public，main 分支，MIT License，Homepage 指向生产域名）。
+- 提交历史（最新在前）：
+  - `1812fa8` fix: 奇点白屏下字幕与时间轴自适应对比度（第五轮，§13）
+  - `5084daf` docs: 交接文档记录第四轮开源发布执行结果
+  - `dfb6e46` feat: COSMOS/存在 Phase 0-9 完整实现（体验流+图谱+数据驱动+部署）
+  - `3ef812d` Initial commit from Create Next App
+- **切勿 `git add .`**：`.vercel-cli/`（Vercel 凭证）、`.next/`、`node_modules/`、`lighthouse-*.json` 必须保持被 .gitignore 忽略（已配置，但提交前务必先 `git status` 确认）。
 - 本地 `.vercel-cli/` 目录：含 Vercel 登录凭证，**严禁删除/移动/提交**。
+- 线上更新的稳妥路径是手动部署（见上节命令）；若 Vercel 项目配置了 Git 集成，push 也会自动触发部署（云端跑 `pnpm verify` 门禁）。
 
 ---
 

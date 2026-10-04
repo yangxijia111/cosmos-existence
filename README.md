@@ -42,6 +42,7 @@
 ### 特性
 
 - **电影式宇宙演化**：奇点 → 暴胀 → 粒子 → 恒星 → 星系 → 地球，六纪元场景程序化生成（无任何预渲染视频），旁白字幕逐句淡入。
+- **自适应字幕对比度**：奇点白炽等亮屏时段，字幕与时间轴自动切换为深色文字 + 白色光晕，暗屏时段保持浅色微光——任何画面文字均可读（`screenBrightness` 数据字段 + 亮度插值引擎驱动）。
 - **科学准确的膨胀表现**：采用共动坐标系——粒子持有固定共动坐标，世界坐标 = 共动坐标 × 尺度因子 a(t)，展现「空间本身膨胀」而非「物质在静止空间中飞散」。
 - **交互式对数时间轴**：从普朗克时间到今天的 138 亿年压缩为 0~1，拖动实时驱动宇宙状态；点击画面可切换播放倍速（1 → 2×）。
 - **数据驱动的哲学内容**：10 个终极问题、48 个哲学立场、80+ 位代表人物（含生卒年）、80+ 处文献出处（以斯坦福哲学百科全书 SEP 等权威来源为口径），全部存放于 `src/data/`，一题一文件，新增/修改内容零 UI 改动。
@@ -105,7 +106,7 @@ src/
 ├── data/                       # ★ 内容唯一事实来源：types.ts / cosmic-eras.ts / questions/（一题一文件）/ validators.ts
 ├── stores/                     # Zustand：体验阶段机 / 时间线 / 性能档位
 ├── hooks/                      # 性能探测 / reduced-motion / 时间轴拖动
-└── lib/                        # 纯函数：宇宙学引擎 a(t)、粒子系统、力导向布局、视图变换（含单测）
+└── lib/                        # 纯函数：宇宙学引擎 a(t)、粒子系统、文字对比度、力导向布局、视图变换（含单测）
 docs/                           # 7 份设计与交接文档（PRD / 架构 / 数据模型 / 设计系统 / 路线图等）
 ```
 
@@ -177,6 +178,7 @@ Darkness (breathing starlight) → Click "开始" → Six cosmic eras (draggable
 ### Features
 
 - **Cinematic cosmic evolution**: Singularity → Inflation → Particles → Stars → Galaxies → Earth. Six eras rendered procedurally (no pre-rendered video), with narrative subtitles fading in line by line.
+- **Adaptive subtitle contrast**: On bright screens (e.g. the white-hot singularity), subtitles and the timeline automatically switch to dark text with a soft white halo, while dark screens keep the light glowing style — text stays readable in every scene (driven by the `screenBrightness` data field and a brightness interpolation engine).
 - **Physically faithful expansion**: Built on comoving coordinates — particles hold fixed comoving positions while world position = comoving position × scale factor a(t), depicting *space itself expanding* rather than matter flying through static space.
 - **Interactive logarithmic timeline**: 13.8 billion years compressed into t ∈ [0,1]; dragging drives the universe state in real time; clicking the scene cycles playback speed (1 → 2×).
 - **Data-driven philosophy content**: 10 ultimate questions, 48 philosophical positions, 80+ key figures (with lifespans), and 80+ cited sources (anchored to the Stanford Encyclopedia of Philosophy and similar references). All content lives in `src/data/` — one file per question; adding or editing content requires zero UI changes.
@@ -240,7 +242,7 @@ src/
 ├── data/                       # ★ Single source of truth: types.ts / cosmic-eras.ts / questions/ (one file per question) / validators.ts
 ├── stores/                     # Zustand: experience phases / timeline / perf tiers
 ├── hooks/                      # Perf detection / reduced-motion / timeline dragging
-└── lib/                        # Pure functions: cosmology engine a(t), particles, force layout, viewport math (with tests)
+└── lib/                        # Pure functions: cosmology engine a(t), particles, text contrast, force layout, viewport math (with tests)
 docs/                           # 7 design & handoff documents (PRD / architecture / data models / design system / roadmap, etc.)
 ```
 
